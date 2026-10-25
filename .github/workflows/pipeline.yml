@@ -43,7 +43,7 @@ jobs:
         terraform init
         terraform apply -auto-approve
 
-    # 4. Extract Dynamic IP and Build Inventory File (Updated to use absolute path)
+    # 4. Extract Dynamic IP and Build Inventory File (Explicitly targets workflow absolute space)
     - name: Capture Live Public IP and Generate Inventory
       run: |
         cd terraform
@@ -54,7 +54,7 @@ jobs:
         echo "[webserver]" > inventory.ini
         echo "$IP_ADDR ansible_user=ubuntu ansible_ssh_private_key_file=${{ github.workspace }}/sanni.pem ansible_ssh_common_args='-o StrictHostKeyChecking=no'" >> inventory.ini
 
-    # 5. Inject Private Deployment SSH Key safely onto the runner (Using workflow root workspace)
+    # 5. Inject Private Deployment SSH Key safely onto the runner (Force workspace path)
     - name: Inject Private SSH Key
       run: |
         echo "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > ${{ github.workspace }}/sanni.pem
