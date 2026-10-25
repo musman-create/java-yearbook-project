@@ -1,0 +1,71 @@
+name: Modern End-to-End DevOps Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  continuous-integration-and-deployment:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Checkout Code
+    - name: Checkout Code Repository
+      uses: actions/checkout@v4
+
+    # 2. Java Compilation Build Check
+    - name: Set up JDK 17 Environment
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Compile Java Application
+      run: |
+        cd java
+        mvn clean compile dependency:copy-dependencies
+
+    # 3. Provision Infrastructure via Terraform
+    - name: Configure AWS Cloud Platform Access Secrets
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Install and Initialize Terraform
+      uses: hashicorp/setup-terraform@v2
+
+    - name: Terraform Init & Apply
+      run: |
+        cd terraform
+        terraform init
+        terraform apply -auto-approve
+
+    # 4. Extract Dynamic IP and Build Inventory File (Updated to use absolute path)
+    - name: Capture Live Public IP and Generate Inventory
+      run: |
+        cd terraform
+        IP_ADDR=$(terraform-bin output -raw ec2_public_ip)
+        echo "EC2_PUBLIC_IP=$IP_ADDR" >> $GITHUB_ENV
+        
+        cd ../ansible
+        echo "[webserver]" > inventory.ini
+        echo "$IP_ADDR ansible_user=ubuntu ansible_ssh_private_key_file=${{ github.workspace }}/sanni.pem ansible_ssh_common_args='-o StrictHostKeyChecking=no'" >> inventory.ini
+
+    # 5. Inject Private Deployment SSH Key safely onto the runner (Using workflow root workspace)
+    - name: Inject Private SSH Key
+      run: |
+        echo "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > ${{ github.workspace }}/sanni.pem
+        chmod 400 ${{ github.workspace }}/sanni.pem
+
+    # 6. Remote Server Ansible Execution Playbook Run
+    - name: Install Ansible
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ansible
+
+    - name: Deploy Applications via Ansible
+      run: |
+        ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --tags "deploy"
