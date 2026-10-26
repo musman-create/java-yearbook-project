@@ -112,5 +112,5 @@ resource "aws_s3_bucket_versioning" "bucket_versioning" {
   bucket = aws_s3_bucket.musmansanni007.id
   versioning_configuration {
     status = "Enabled"
-  }
+ }
 }
