@@ -1,4 +1,4 @@
-name: Modern End-to-End DevOps Pipeline
+name: Final Automated Capstone Deployment Pipeline Engine
 
 on:
   push:
