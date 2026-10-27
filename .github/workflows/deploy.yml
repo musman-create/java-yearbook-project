@@ -48,16 +48,13 @@ jobs:
           terraform init
           terraform apply -auto-approve
 
-      # Step 5: Capture EC2 Public IP and Dynamically Write Ansible's Inventory
+      # Step 5: Capture EC2 Public IP from tfstate and Dynamically Write Ansible's Inventory
       - name: Generate Dynamic Inventory and Execute Ansible
         env:
           ANSIBLE_HOST_KEY_CHECKING: "False"
         run: |
-          # 1. Fetch clean output strictly from Terraform directly
-          cd terraform
-          EC2_IP=$(terraform output -raw ec2_public_ip | tr -d '\r\n[:space:]')
-          cd ..
-          
+          # 1. Parse the clean IP straight out of the local Terraform state JSON file
+          EC2_IP=$(jq -r '.outputs.ec2_public_ip.value' terraform/terraform.tfstate)
           echo "Cleaned Target Host IP: '$EC2_IP'"
 
           # 2. Re-create the secure private key file in the absolute workspace root
