@@ -1,0 +1,63 @@
+name: Modern End-to-End DevOps Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Step 2: Compile and package the Java application using Maven
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build Java Application
+        run: |
+          cd java
+          mvn clean package -DskipTests
+
+      # Step 3: Configure AWS Credentials for Terraform
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1 
+
+      # Step 4: Initialize and apply the Terraform configuration
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Init and Apply
+        id: terraform
+        run: |
+          cd terraform
+          terraform init
+          terraform apply -auto-approve
+
+      # Step 5: Capture EC2 Public IP and Dynamically Write Ansible's Inventory
+      - name: Generate Dynamic Inventory and Execute Ansible
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: "False"
+        run: |
+          EC2_IP=$(cd terraform && terraform output -raw ec2_public_ip)
+          echo "Deploying applications to Target Host: $EC2_IP"
+          
+          echo "${{ secrets.AWS_SSH_KEY }}" > $GITHUB_WORKSPACE/sanni.pem
+          chmod 400 $GITHUB_WORKSPACE/sanni.pem
+          
+          echo "[webservers]" > ansible/inventory.ini
+          echo "$EC2_IP ansible_user=ubuntu ansible_ssh_private_key_file=$GITHUB_WORKSPACE/sanni.pem" >> ansible/inventory.ini
+          
+          cd ansible
+          ansible-playbook -i inventory.ini playbook.yml
