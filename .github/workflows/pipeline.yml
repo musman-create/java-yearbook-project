@@ -43,7 +43,7 @@ jobs:
         terraform init
         terraform apply -auto-approve
 
-    # 4. Extract Dynamic IP and Build Inventory File (Uses explicit absolute workspace paths)
+    # 4. Extract Dynamic IP and Build Inventory File
     - name: Capture Live Public IP and Generate Inventory
       run: |
         cd terraform
@@ -54,11 +54,13 @@ jobs:
         echo "[webserver]" > inventory.ini
         echo "$IP_ADDR ansible_user=ubuntu ansible_ssh_private_key_file=${{ github.workspace }}/sanni.pem ansible_ssh_common_args='-o StrictHostKeyChecking=no'" >> inventory.ini
 
-    # 5. Inject Private Deployment SSH Key safely onto the runner (Using absolute workspace path)
+    # 5. Inject Private Deployment SSH Key safely with exact newline layout preserving
     - name: Inject Private SSH Key
       run: |
-        echo "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > ${{ github.workspace }}/sanni.pem
-        chmod 400 ${{ github.workspace }}/sanni.pem
+        cat << 'KEYEOF' > ${{ github.workspace }}/sanni.pem
+        ${{ secrets.AWS_SSH_PRIVATE_KEY }}
+        KEYEOF
+        chmod 600 ${{ github.workspace }}/sanni.pem
 
     # 6. Remote Server Ansible Execution Playbook Run
     - name: Install Ansible
@@ -68,4 +70,5 @@ jobs:
 
     - name: Deploy Applications via Ansible
       run: |
+        export ANSIBLE_HOST_KEY_CHECKING=False
         ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --tags "deploy"
