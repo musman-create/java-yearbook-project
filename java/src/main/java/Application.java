@@ -18,6 +18,7 @@ public class Application {
             0
         );
 
+        server.createContext("/profile", Application::handleProfileRequest);
         server.createContext("/", Application::handleRequest);
 
         server.setExecutor(null);
@@ -39,6 +40,263 @@ public class Application {
         );
 
         server.start();
+    }
+
+
+    private static void handleProfileRequest(HttpExchange exchange)
+            throws IOException {
+
+        String response = """
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <meta name="description" content="Sanni's Cloud and DevOps engineering portfolio">
+                    <title>Sanni | Cloud &amp; DevOps Engineer</title>
+                    <style>
+                        * { box-sizing: border-box; }
+
+                        :root {
+                            --bg: #0b1120;
+                            --panel: #141e32;
+                            --border: #2a3954;
+                            --text: #edf3ff;
+                            --muted: #aab8ce;
+                            --blue: #85a5ff;
+                            --green: #66e6b5;
+                        }
+
+                        body {
+                            margin: 0;
+                            background: radial-gradient(ellipse at top, #1b2b4c, var(--bg) 65%);
+                            color: var(--text);
+                            font-family: Arial, Helvetica, sans-serif;
+                            line-height: 1.7;
+                        }
+
+                        a { color: var(--blue); }
+
+                        .container {
+                            width: min(960px, 92%);
+                            margin: auto;
+                            padding: 32px 0;
+                        }
+
+                        nav {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            margin-bottom: 30px;
+                            gap: 16px;
+                        }
+
+                        .brand {
+                            font-weight: bold;
+                            letter-spacing: 2px;
+                        }
+
+                        nav a {
+                            text-decoration: none;
+                            font-size: 0.9rem;
+                        }
+
+                        .hero, .section {
+                            background: rgba(20, 30, 50, 0.94);
+                            border: 1px solid var(--border);
+                            border-radius: 20px;
+                            padding: 30px;
+                            margin-bottom: 20px;
+                        }
+
+                        .avatar {
+                            width: 76px;
+                            height: 76px;
+                            display: grid;
+                            place-items: center;
+                            border-radius: 20px;
+                            background: linear-gradient(135deg, var(--blue), var(--green));
+                            color: #0b1120;
+                            font-size: 2rem;
+                            font-weight: 900;
+                            margin-bottom: 20px;
+                        }
+
+                        .eyebrow {
+                            color: var(--green);
+                            font-size: 0.8rem;
+                            font-weight: bold;
+                            letter-spacing: 2px;
+                            text-transform: uppercase;
+                        }
+
+                        h1 {
+                            font-size: clamp(2.3rem, 6vw, 4rem);
+                            line-height: 1.15;
+                            margin: 10px 0;
+                        }
+
+                        h2 { margin-top: 0; }
+
+                        .headline {
+                            color: var(--blue);
+                            font-size: 1.2rem;
+                            font-weight: bold;
+                        }
+
+                        .intro, .section p { color: var(--muted); }
+
+                        .intro { max-width: 680px; }
+
+                        .button {
+                            display: inline-block;
+                            padding: 10px 16px;
+                            margin-top: 12px;
+                            border-radius: 9px;
+                            border: 1px solid var(--border);
+                            text-decoration: none;
+                            font-weight: bold;
+                        }
+
+                        .button.primary {
+                            background: var(--blue);
+                            color: #0b1120;
+                            border-color: var(--blue);
+                        }
+
+                        .skills {
+                            display: flex;
+                            flex-wrap: wrap;
+                            gap: 10px;
+                            list-style: none;
+                            padding: 0;
+                        }
+
+                        .skills li {
+                            background: #1b2943;
+                            border: 1px solid var(--border);
+                            border-radius: 8px;
+                            padding: 7px 12px;
+                            font-size: 0.9rem;
+                        }
+
+                        .project {
+                            border: 1px solid var(--border);
+                            border-radius: 12px;
+                            padding: 18px;
+                        }
+
+                        .project h3 { margin-top: 0; }
+
+                        footer {
+                            text-align: center;
+                            color: var(--muted);
+                            padding: 18px 0;
+                            font-size: 0.85rem;
+                        }
+
+                        @media (max-width: 560px) {
+                            .hero, .section { padding: 21px; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <main class="container">
+                        <nav>
+                            <div class="brand">SANNI.DEV</div>
+                            <a href="/">View Yearbook &rarr;</a>
+                        </nav>
+
+                        <section class="hero">
+                            <div class="avatar" aria-hidden="true">S</div>
+                            <div class="eyebrow">Cloud • Automation • DevOps</div>
+                            <h1>Hello, I am Sanni.</h1>
+                            <div class="headline">Aspiring Cloud &amp; DevOps Engineer</div>
+                            <p class="intro">
+                                I am developing practical skills in cloud computing,
+                                Linux administration, containers, infrastructure
+                                automation, and continuous integration and delivery.
+                                I enjoy learning through hands-on projects and solving
+                                real-world deployment challenges.
+                            </p>
+                            <a class="button primary" href="#skills">Explore my skills</a>
+                        </section>
+
+                        <section class="section">
+                            <h2>About Me</h2>
+                            <p>
+                                I am an aspiring Cloud and DevOps Engineer focused on
+                                building reliable, automated, and maintainable
+                                application environments. I am strengthening my
+                                technical knowledge through practical projects involving
+                                cloud infrastructure, Linux, containers, and deployment
+                                automation.
+                            </p>
+                        </section>
+
+                        <section class="section" id="skills">
+                            <h2>Technical Skills</h2>
+                            <p>Technologies I have been learning and practising:</p>
+                            <ul class="skills">
+                                <li>AWS EC2</li>
+                                <li>Linux</li>
+                                <li>Ubuntu</li>
+                                <li>Docker</li>
+                                <li>Docker Compose</li>
+                                <li>Terraform</li>
+                                <li>Ansible</li>
+                                <li>Git</li>
+                                <li>GitHub Actions</li>
+                                <li>Java</li>
+                                <li>Maven</li>
+                                <li>CI/CD</li>
+                            </ul>
+                        </section>
+
+                        <section class="section">
+                            <h2>Featured Project</h2>
+                            <div class="project">
+                                <h3>Cloud &amp; DevOps Capstone</h3>
+                                <p>
+                                    A practical deployment project using AWS EC2 to host
+                                    applications, Docker to package and run services,
+                                    Ansible to automate server configuration and
+                                    deployment, and GitHub Actions to automate the
+                                    delivery workflow.
+                                </p>
+                                <p>
+                                    This project demonstrates my progress in Linux
+                                    administration, containerization, deployment
+                                    automation, and cloud application hosting.
+                                </p>
+                            </div>
+                        </section>
+
+                        <section class="section">
+                            <h2>My Career Goal</h2>
+                            <p>
+                                My goal is to grow into a skilled Cloud and DevOps
+                                Engineer by continuously building projects, improving
+                                my automation skills, and learning how to deploy and
+                                maintain applications reliably in cloud environments.
+                            </p>
+                        </section>
+
+                        <footer>
+                            Sanni | Aspiring Cloud &amp; DevOps Engineer
+                        </footer>
+                    </main>
+                </body>
+                </html>
+                """;
+
+        byte[] body = response.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        exchange.getResponseHeaders().set("Content-Type", "text/html; charset=UTF-8");
+        exchange.sendResponseHeaders(200, body.length);
+
+        try (OutputStream output = exchange.getResponseBody()) {
+            output.write(body);
+        }
     }
 
     private static void handleRequest(HttpExchange exchange)
@@ -340,7 +598,7 @@ public class Application {
 
     <div class="footer-marquee-container">
         <marquee behavior="scroll" direction="left">
-            Java Application Status: <strong>ONLINE</strong> • From broken code builds to live apps — we made it — Congratulations! • Powered by profAkymbo © 2026 
+            Java Application Status: <strong>ONLINE</strong> • From broken code builds to live apps — we made it — Congratulations! • Powered by profAkymbo © 2026
         </marquee>
     </div>
 
