@@ -583,6 +583,17 @@ public class Application {
                 <p class="quote">"Instructors at Bloomy Technologies are highly experienced and exceptional at what they do"</p>
             </div>
 
+            <!-- Sanni Musa profile -->
+            <div class="trainee-card my-profile">
+                <div class="photo-box">
+                    <img src="https://api.dicebear.com/9.x/initials/svg?seed=Sanni%20Musa%20Oluwadamilare&backgroundColor=1d4ed8&textColor=ffffff"
+                         alt="Sanni Musa Oluwadamilare">
+                </div>
+                <h3 class="name">Sanni Musa Oluwadamilare</h3>
+                <div class="superlative">Aspiring Cloud &amp; DevOps Engineer</div>
+                <p class="quote">"Building reliable cloud infrastructure, automating deployments, and turning ideas into working applications."</p>
+            </div>
+
             <!-- Daniel -->
             <div class="trainee-card">
                 <div class="photo-box">

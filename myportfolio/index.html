@@ -1,15 +1,465 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>My Portfolio</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f9; padding-top: 50px; }
-        h1 { color: #333; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Sanni Musa Oluwadamilare's Cloud and DevOps engineering portfolio, projects, and learning journey.">
+<title>Sanni Musa | Cloud & DevOps Engineer</title>
+<style>
+:root {
+  --bg: #07111f;
+  --panel: #0d1b2e;
+  --panel2: #10233a;
+  --blue: #38bdf8;
+  --purple: #a78bfa;
+  --text: #edf5ff;
+  --muted: #a5b6cc;
+  --border: #243c59;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 85px; }
+body {
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+}
+a { color: inherit; }
+.container { width: min(1080px, 90%); margin: auto; }
+header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(7,17,31,.94);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+}
+.nav {
+  min-height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.logo { font-size: 1.05rem; font-weight: 800; text-decoration: none; }
+.logo span { color: var(--blue); }
+nav { display: flex; flex-wrap: wrap; gap: 20px; }
+nav a { font-size: .88rem; color: var(--muted); text-decoration: none; }
+nav a:hover, .text-link:hover { color: var(--blue); }
+.hero {
+  padding: 90px 0 80px;
+  background:
+    radial-gradient(ellipse at 85% 15%, #30256b77, transparent 38%),
+    radial-gradient(ellipse at 10% 20%, #07598566, transparent 35%);
+  border-bottom: 1px solid var(--border);
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.4fr .8fr;
+  gap: 45px;
+  align-items: center;
+}
+.eyebrow {
+  color: var(--blue);
+  font-size: .78rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+h1 {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  line-height: 1.08;
+  letter-spacing: -2px;
+  margin: 15px 0;
+}
+.gradient {
+  background: linear-gradient(90deg, var(--blue), var(--purple));
+  color: transparent;
+  background-clip: text;
+}
+.hero p { max-width: 620px; color: var(--muted); font-size: 1.08rem; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.btn {
+  display: inline-block;
+  text-decoration: none;
+  border: 1px solid var(--blue);
+  padding: 11px 18px;
+  border-radius: 9px;
+  font-weight: 700;
+  font-size: .9rem;
+  transition: .2s;
+}
+.btn.primary { background: #0879e8; border-color: #0879e8; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px #0284c733; }
+.terminal {
+  background: #081321;
+  border: 1px solid #315173;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 65px #0005;
+  transform: rotate(1deg);
+}
+.terminal-top {
+  padding: 12px 16px;
+  background: var(--panel2);
+  color: var(--muted);
+  font-size: .8rem;
+}
+.dots { color: #fb7185; letter-spacing: 5px; }
+.terminal pre {
+  padding: 24px 20px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: .86rem/2 monospace;
+  color: #c4d7ee;
+}
+.terminal .cmd { color: #67e8a5; }
+section { padding: 65px 0; border-bottom: 1px solid var(--border); }
+.section-heading { margin-bottom: 28px; }
+.section-heading h2 { font-size: 1.8rem; margin-bottom: 5px; }
+.section-heading p, .muted { color: var(--muted); }
+.about-grid { display: grid; grid-template-columns: 1.3fr .7fr; gap: 24px; }
+.card {
+  padding: 25px;
+  background: linear-gradient(145deg, var(--panel), #0a1727);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+.card p { color: var(--muted); }
+.card h3 { margin-bottom: 10px; }
+.contact-line { margin-top: 20px; overflow-wrap: anywhere; }
+.contact-line a, .text-link { color: var(--blue); text-decoration: none; }
+.stat-list { display: grid; gap: 12px; }
+.stat {
+  padding: 15px;
+  background: var(--panel2);
+  border-radius: 10px;
+  border-left: 3px solid var(--blue);
+}
+.stat strong { display: block; }
+.stat small { color: var(--muted); }
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.skill {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 18px;
+  border-radius: 12px;
+  transition: .2s;
+}
+.skill:hover, .project:hover { border-color: var(--blue); transform: translateY(-3px); }
+.skill .symbol { font-size: 1.4rem; margin-bottom: 8px; }
+.skill h3 { font-size: 1rem; }
+.skill p { color: var(--muted); font-size: .83rem; }
+.project-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.project { transition: .2s; }
+.project-tag {
+  display: inline-block;
+  color: #bae6fd;
+  background: #123353;
+  border: 1px solid #245477;
+  border-radius: 5px;
+  padding: 3px 8px;
+  margin: 3px 4px 8px 0;
+  font-size: .72rem;
+}
+.project p { margin: 10px 0 16px; }
+.project .text-link { font-weight: 700; font-size: .9rem; }
+.journey { display: grid; gap: 0; max-width: 760px; }
+.journey-item {
+  position: relative;
+  padding: 0 0 25px 28px;
+  border-left: 2px solid #284b70;
+}
+.journey-item::before {
+  content: "";
+  position: absolute;
+  left: -7px;
+  top: 7px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--blue);
+  box-shadow: 0 0 12px #38bdf855;
+}
+.journey-item h3 { font-size: 1rem; }
+.journey-item p { color: var(--muted); font-size: .92rem; }
+.goal-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.goal-grid ul { list-style: none; color: var(--muted); }
+.goal-grid li { margin: 8px 0; }
+.goal-grid li::before { content: "✓ "; color: #67e8a5; font-weight: 800; }
+.contact-panel {
+  text-align: center;
+  padding: 40px 25px;
+  background: radial-gradient(ellipse at top, #1d3760, var(--panel));
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+.contact-panel p { color: var(--muted); margin: 12px 0 20px; }
+footer { padding: 25px 0; text-align: center; color: var(--muted); font-size: .82rem; }
+@media(max-width: 800px) {
+  .hero-grid, .about-grid { grid-template-columns: 1fr; }
+  .skills-grid { grid-template-columns: repeat(2, 1fr); }
+  .terminal { transform: none; }
+}
+@media(max-width: 540px) {
+  .nav { padding: 14px 0; align-items: flex-start; flex-direction: column; }
+  nav { gap: 12px; }
+  .hero { padding: 60px 0; }
+  .project-grid, .goal-grid { grid-template-columns: 1fr; }
+  section { padding: 48px 0; }
+}
+</style>
 </head>
 <body>
-    <h1>Welcome to My DevOps Capstone Portfolio</h1>
-    <p>Both applications are up and running via Docker Compose!</p>
+
+<header>
+  <div class="container nav">
+    <a class="logo" href="#home">☁ Sanni <span>Musa</span></a>
+    <nav aria-label="Main navigation">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#journey">Learning</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="hero" id="home">
+  <div class="container hero-grid">
+    <div>
+      <div class="eyebrow">Aspiring Junior Cloud & DevOps Engineer</div>
+      <h1>Hi, I'm Sanni Musa <span class="gradient">Oluwadamilare.</span></h1>
+      <p>
+        I'm learning to build reliable cloud infrastructure, automate deployments,
+        and deliver applications with modern DevOps tools. I turn practice into
+        projects, one deployment at a time.
+      </p>
+      <div class="actions">
+        <a class="btn primary" href="#projects">Explore My Projects ↗</a>
+        <a class="btn" href="#contact">Let's Connect</a>
+      </div>
+    </div>
+    <div class="terminal" aria-label="Illustration of a terminal">
+      <div class="terminal-top"><span class="dots">● ● ●</span> &nbsp; devops-terminal</div>
+      <pre><span class="cmd">$ whoami</span>
+sanni-musa
+
+<span class="cmd">$ current_focus</span>
+AWS & Linux
+Docker & Compose
+Terraform & Ansible
+GitHub Actions / CI/CD
+
+<span class="cmd">$ status</span>
+Always learning_</pre>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="container">
+    <div class="section-heading">
+      <h2>01. About Me</h2>
+      <p>The engineer I'm working to become.</p>
+    </div>
+    <div class="about-grid">
+      <div class="card">
+        <h3>Learning by building.</h3>
+        <p>
+          I'm an aspiring Cloud and DevOps Engineer developing practical skills
+          in Linux administration, AWS infrastructure, containers, infrastructure
+          as code, configuration management, and CI/CD automation.
+        </p>
+        <br>
+        <p>
+          My current focus is an end-to-end deployment project that brings these
+          tools together to run a portfolio website and a Java application on AWS.
+          I value clear documentation, repeatable deployments, troubleshooting,
+          and learning from real errors.
+        </p>
+        <div class="contact-line">
+          <span class="muted">Based in:</span> Lagos, Nigeria<br>
+          <span class="muted">Email:</span>
+          <a href="mailto:musmansanni123@gmail.com">musmansanni123@gmail.com</a>
+        </div>
+      </div>
+      <div class="stat-list">
+        <div class="stat"><strong>☁ Cloud</strong><small>AWS and cloud infrastructure fundamentals</small></div>
+        <div class="stat"><strong>⚙ Automation</strong><small>Terraform, Ansible and GitHub Actions</small></div>
+        <div class="stat"><strong>▣ Containers</strong><small>Docker and multi-container applications</small></div>
+        <div class="stat"><strong>↗ Mindset</strong><small>Hands-on learning, debugging and documentation</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="container">
+    <div class="section-heading">
+      <h2>02. Technical Toolkit</h2>
+      <p>Tools I'm studying and applying in practical projects.</p>
+    </div>
+    <div class="skills-grid">
+      <div class="skill"><div class="symbol">☁</div><h3>AWS</h3><p>EC2, VPC, networking and cloud fundamentals</p></div>
+      <div class="skill"><div class="symbol">⌘</div><h3>Linux</h3><p>Terminal, shell commands and server management</p></div>
+      <div class="skill"><div class="symbol">▣</div><h3>Docker</h3><p>Images, containers and Dockerfiles</p></div>
+      <div class="skill"><div class="symbol">◫</div><h3>Docker Compose</h3><p>Running multiple application services</p></div>
+      <div class="skill"><div class="symbol">⌘</div><h3>Terraform</h3><p>Infrastructure as Code and AWS resources</p></div>
+      <div class="skill"><div class="symbol">⇄</div><h3>Ansible</h3><p>Server configuration and deployment automation</p></div>
+      <div class="skill"><div class="symbol">⑂</div><h3>Git & GitHub</h3><p>Version control, commits and repositories</p></div>
+      <div class="skill"><div class="symbol">⚡</div><h3>GitHub Actions</h3><p>Workflow automation and CI/CD pipelines</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="container">
+    <div class="section-heading">
+      <h2>03. Featured Projects</h2>
+      <p>Practical work that connects my learning to real deployment tasks.</p>
+    </div>
+    <div class="project-grid">
+      <article class="card project">
+        <div class="eyebrow">Featured · Cloud & Automation</div>
+        <h3>Modern End-to-End DevOps Pipeline</h3>
+        <div>
+          <span class="project-tag">AWS</span><span class="project-tag">Terraform</span>
+          <span class="project-tag">Ansible</span><span class="project-tag">Docker</span>
+          <span class="project-tag">GitHub Actions</span>
+        </div>
+        <p>
+          A capstone project designed to provision AWS infrastructure, configure
+          an EC2 server, containerize two applications, and automate deployment
+          through a GitHub Actions workflow.
+        </p>
+        <a class="text-link" href="https://github.com/ProfAkymbo/java-yearbook-project"
+           target="_blank" rel="noopener noreferrer">View Capstone Repository ↗</a>
+      </article>
+      <article class="card project">
+        <div class="eyebrow">Web · Containers</div>
+        <h3>Personal Portfolio Website</h3>
+        <div>
+          <span class="project-tag">HTML</span><span class="project-tag">CSS</span>
+          <span class="project-tag">Docker</span><span class="project-tag">Nginx</span>
+        </div>
+        <p>
+          A responsive personal website packaged as a Docker image and served
+          through Nginx, demonstrating basic web development and containerization.
+        </p>
+        <a class="text-link" href="https://github.com/ProfAkymbo/java-yearbook-project"
+           target="_blank" rel="noopener noreferrer">Explore Project Files ↗</a>
+      </article>
+      <article class="card project">
+        <div class="eyebrow">Java · Deployment</div>
+        <h3>Containerized Java Yearbook App</h3>
+        <div>
+          <span class="project-tag">Java</span><span class="project-tag">Maven</span>
+          <span class="project-tag">Docker</span><span class="project-tag">Compose</span>
+        </div>
+        <p>
+          A Java application packaged with a Dockerfile and run alongside the
+          portfolio as a separate service in a multi-container setup.
+        </p>
+        <a class="text-link" href="https://github.com/ProfAkymbo/java-yearbook-project"
+           target="_blank" rel="noopener noreferrer">View Source Code ↗</a>
+      </article>
+      <article class="card project">
+        <div class="eyebrow">Infrastructure · Learning</div>
+        <h3>Infrastructure as Code</h3>
+        <div>
+          <span class="project-tag">Terraform</span><span class="project-tag">AWS EC2</span>
+          <span class="project-tag">Networking</span>
+        </div>
+        <p>
+          Practising how to define and manage cloud resources through code,
+          use Terraform outputs, and connect infrastructure provisioning to
+          an automated deployment workflow.
+        </p>
+        <a class="text-link" href="https://developer.hashicorp.com/terraform"
+           target="_blank" rel="noopener noreferrer">Terraform Learning Resource ↗</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="journey">
+  <div class="container">
+    <div class="section-heading">
+      <h2>04. My Learning Journey</h2>
+      <p>The skills I'm developing step by step.</p>
+    </div>
+    <div class="journey">
+      <div class="journey-item"><h3>Linux & Command Line</h3><p>Working with files, commands, permissions and server environments.</p></div>
+      <div class="journey-item"><h3>AWS Cloud Fundamentals</h3><p>Learning EC2, VPCs, subnets, security groups and cloud networking.</p></div>
+      <div class="journey-item"><h3>Docker & Docker Compose</h3><p>Building images, running containers and connecting multiple services.</p></div>
+      <div class="journey-item"><h3>Terraform</h3><p>Defining infrastructure as code and learning how to manage resource state.</p></div>
+      <div class="journey-item"><h3>Ansible</h3><p>Automating server setup, installing dependencies and deploying applications.</p></div>
+      <div class="journey-item"><h3>GitHub Actions & CI/CD</h3><p>Connecting builds, infrastructure and deployment tasks in an automated workflow.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="goals">
+  <div class="container">
+    <div class="section-heading">
+      <h2>05. Goals & Next Steps</h2>
+      <p>Focused on building skills through consistent practice.</p>
+    </div>
+    <div class="goal-grid">
+      <div class="card">
+        <h3>Current Focus</h3>
+        <ul>
+          <li>Complete and document my DevOps capstone</li>
+          <li>Improve AWS networking and IAM knowledge</li>
+          <li>Make deployments repeatable and reliable</li>
+          <li>Strengthen Linux and troubleshooting skills</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Future Goals</h3>
+        <ul>
+          <li>Build and document more cloud projects</li>
+          <li>Learn monitoring, logging and security practices</li>
+          <li>Explore Kubernetes after strengthening container skills</li>
+          <li>Prepare for relevant cloud certifications</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="container">
+    <div class="contact-panel">
+      <div class="eyebrow">Have an opportunity or project?</div>
+      <h2>Let's Build Something Reliable.</h2>
+      <p>I'm open to junior opportunities, collaboration, feedback and learning from experienced engineers.</p>
+      <div class="actions" style="justify-content:center">
+        <a class="btn primary" href="mailto:musmansanni123@gmail.com">✉ Email Me</a>
+        <a class="btn" href="https://github.com/musman-create/java-yearbook-project"
+           target="_blank" rel="noopener noreferrer">⌘ GitHub Repository</a>
+      </div>
+      <div class="contact-line">
+        <a href="mailto:musmansanni123@gmail.com">musmansanni123@gmail.com</a>
+        &nbsp; · &nbsp; whatapp 08132393766,calling line:08106331858
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="container">
+    <p>© 2026 Sanni Musa Oluwadamilare · Built with HTML, CSS and curiosity.</p>
+    <p>Cloud · DevOps · Build · Deploy · Improve</p>
+  </div>
+</footer>
 </body>
 </html>

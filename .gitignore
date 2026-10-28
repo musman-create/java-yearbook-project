@@ -4,3 +4,4 @@
 .terraform.lock.hcl
 sanni.pem
 java/target/
+*.pem
