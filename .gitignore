@@ -5,3 +5,26 @@
 sanni.pem
 java/target/
 *.pem
+*.tfplan
+
+# Terraform local state, plans, and backups
+*.tfstate
+*.tfstate.*
+*.tfplan
+tfplan
+
+# Local Ansible inventory
+ansible/inventory.ini
+
+# Local backup files
+*.backup
+
+# Local Ansible inventory containing server details
+ansible/inventory.ini
+
+# Local backup files
+*.backup
+
+# Terraform plans
+*.tfplan
+tfplan
