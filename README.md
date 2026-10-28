@@ -1,333 +1,290 @@
-# Cloud & DevOps Automation Capstone Project
+# Modern End-to-End DevOps Pipeline
 
-## 1. About This Project
+**A hands-on DevOps capstone project demonstrating infrastructure as code, configuration management, containerization, and automated deployment on AWS.**
 
-This project demonstrates how I use Cloud Computing and DevOps tools to deploy and manage web applications automatically.
+## Project Overview
 
-In simple terms, I have two applications: a portfolio website and a Java application. Both run on a server hosted on Amazon Web Services (AWS).
+This project automates the build and deployment of two applications on a single AWS EC2 instance using modern DevOps tools.
 
-Instead of manually logging into the server every time I want to deploy an update, I have created an automated process using GitHub Actions, Docker, and Ansible.
+The pipeline uses GitHub Actions to coordinate the process, Terraform to manage AWS infrastructure, Ansible to configure the EC2 server and deploy the applications, and Docker Compose to run both applications as containers.
 
-When I push code changes to my GitHub repository, GitHub Actions starts the deployment process, builds the Java application, and uses Ansible to configure the server and deploy the applications.
+The objective is to demonstrate how different DevOps tools work together to create a repeatable, maintainable deployment workflow.
 
-**The main goal of this project is to make application deployment faster, more consistent, and easier to manage.**
+## Project Objectives
 
-## 2. What Problem Does This Project Solve?
+- Automate application deployment using GitHub Actions.
+- Manage AWS infrastructure with Terraform.
+- Configure and manage the EC2 server using Ansible.
+- Package applications using Docker.
+- Run multiple applications on one EC2 instance with Docker Compose.
+- Verify deployment results through automated checks.
+- Apply infrastructure as code and version-control best practices.
 
-Imagine you have built a website and want to put it online.
-
-Traditionally, you might have to log into a server, install the required software, copy your files, configure the application, and start it manually.
-
-This process can take time, and mistakes can happen along the way.
-
-My project uses automation to handle many of these tasks.
-
-For example:
-
-- I store my project code on GitHub.
-- GitHub Actions automatically runs the deployment workflow when I push changes to the main branch.
-- Maven builds my Java application.
-- Docker packages and runs the applications in containers.
-- Ansible automates the configuration and deployment of the applications on my AWS server.
-- AWS provides the cloud server where the applications run.
-
-This approach reduces repetitive manual work and makes the deployment process more reliable.
-
-## 3. Project Architecture
-
-The project follows this workflow:
+## Architecture
 
 ```text
-Developer makes code changes
-           |
-           v
-      Git and GitHub
-           |
-           v
-    GitHub Actions
-           |
-           v
-     Build Java App
-        (Maven)
-           |
-           v
-    Connect to AWS EC2
-           |
-           v
-   Ansible configures
-       the server
-           |
-           v
-   Docker Compose runs
-     the applications
-           |
-           v
-    Applications online
+Developer
+    |
+    | Git push to main
+    v
+GitHub Repository
+    |
+    v
+GitHub Actions CI/CD
+    |
+    +--> Configure AWS credentials
+    |
+    +--> Terraform init, validate and plan
+    |
+    +--> Build Java application with Maven
+    |
+    +--> Prepare Ansible inventory and SSH access
+    |
+    +--> Run Ansible playbook
+              |
+              v
+        AWS EC2 Instance
+              |
+              v
+        Docker Compose
+              |
+              +--> Portfolio Container
+              |       Port 80
+              |
+              +--> Java Application Container
+                      Port 8081
 ```
 
-Terraform is also included in the project for managing cloud infrastructure as code.
+**Important:** The current workflow runs Terraform planning and validation. It does not automatically apply infrastructure changes. Ansible performs the application deployment to the existing EC2 instance.
 
-In simple terms, Terraform helps define the cloud resources, while Ansible helps configure the server and deploy the applications.
+## Technology Stack
 
-## 4. Technologies Used
-
-| Technology | What it does in this project |
+| Technology | Purpose |
 |---|---|
-| **Amazon Web Services (AWS)** | Provides the cloud server that hosts the applications. |
-| **Amazon EC2** | The virtual computer where the applications run. |
-| **Terraform** | Defines and manages cloud infrastructure using code. |
-| **Git and GitHub** | Store the project files and track changes. |
-| **GitHub Actions** | Automatically runs the build and deployment workflow. |
-| **Ansible** | Automates server configuration and application deployment. |
-| **Docker** | Packages applications so they can run in isolated environments called containers. |
-| **Docker Compose** | Manages and starts multiple application containers together. |
-| **Java** | The programming language used by the Java application. |
-| **Maven** | Builds the Java application and manages its dependencies. |
-| **Linux and Ubuntu** | Provide the operating system for the development environment and cloud server. |
+| AWS EC2 | Hosts the applications |
+| Amazon VPC | Provides network isolation and connectivity |
+| Terraform | Defines and manages AWS infrastructure |
+| Amazon S3 | Stores Terraform remote state and application artifacts |
+| GitHub Actions | Automates the CI/CD workflow |
+| Ansible | Configures the server and deploys applications |
+| Docker | Packages applications into containers |
+| Docker Compose | Runs both application services |
+| Java 17 | Java application runtime and build environment |
+| Apache Maven | Builds the Java application |
+| Linux / Ubuntu | Development and server administration environment |
+| Git and GitHub | Version control and collaboration |
 
-## 5. Applications Deployed
+## Applications
 
-This project runs two main applications.
+### 1. Personal Portfolio
 
-### Portfolio Website
+The portfolio is packaged as a Docker container and exposed on port 80.
 
-The portfolio website is accessible through the web server on port 80, which is the standard port for HTTP websites.
+- Service name: `portfolio`
+- Container name: `app-portfolio-1`
+- Container port: `80`
 
-### Java Application
+### 2. Java Yearbook Application
 
-The Java application runs in a separate Docker container and is exposed on port 8081.
+The Java application is built with Maven and packaged into a Docker container running on port 8081.
 
-The two applications run on the same AWS EC2 instance but use different ports.
+- Service name: `java-app`
+- Container name: `app-java-app-1`
+- Application port: `8081`
 
-## 6. How the Automation Works
+Both applications run on the same EC2 instance but are managed as separate Docker Compose services.
 
-Here is what happens when I update my project.
-
-**Step 1: I update my code**
-
-I make changes to my project on my local Linux computer.
-
-**Step 2: I push the changes to GitHub**
-
-I use Git to save my changes and push them to the `main` branch of my repository.
-
-**Step 3: GitHub Actions starts automatically**
-
-GitHub detects the new changes and runs my configured workflow.
-
-**Step 4: The Java application is built**
-
-Maven compiles the Java code and packages the application into a build artifact.
-
-**Step 5: Ansible connects to the cloud server**
-
-Ansible uses SSH to connect to my AWS EC2 instance and execute the deployment tasks.
-
-**Step 6: Docker Compose deploys the applications**
-
-Docker Compose builds or updates the required containers and starts the applications.
-
-**Step 7: I verify the deployment**
-
-I check the workflow results in GitHub Actions and confirm that the applications are accessible.
-
-This process allows me to deploy application updates without performing every deployment step manually.
-
-## 7. Project Structure
-
-The repository contains the files used to build, configure, and deploy the project.
+## Repository Structure
 
 ```text
 java-yearbook-project/
-|
-|-- .github/
-|   |-- workflows/
-|       |-- deploy.yml
-|       |-- pipeline.yml.disabled
-|
-|-- ansible/
-|   |-- playbook.yml
-|   |-- inventory.ini
-|
-|-- java/
-|   |-- pom.xml
-|   |-- src/
-|
-|-- myportfolio/
-|
-|-- terraform/
-|
-|-- .gitignore
-|-- README.md
+├── .github/
+│   └── workflows/
+│       └── deploy.yml
+├── ansible/
+│   └── playbook.yml
+├── java/
+│   ├── pom.xml
+│   ├── Dockerfile
+│   └── src/
+├── myportfolio/
+│   ├── index.html
+│   └── Dockerfile
+├── terraform/
+│   ├── main.tf
+│   ├── outputs.tf
+│   └── backend.tf
+├── docker-compose.yml
+├── .gitignore
+└── README.md
 ```
 
-**Note:** This is a simplified overview of the project structure. Some files, such as the Docker Compose file, may be located in different directories depending on the current repository configuration. The `pipeline.yml.disabled` file is retained as a disabled workflow and is not run by GitHub Actions as a normal `.yml` workflow.
+The structure above shows the main project components. Additional files may exist in the repository.
 
-### What the main folders mean
+## CI/CD Workflow
 
-- `.github/workflows/`: Contains the instructions GitHub Actions follows to run automation.
-- `ansible/`: Contains the playbook used to configure the server and deploy the applications.
-- `java/`: Contains the Java application source code and Maven configuration.
-- `myportfolio/`: Contains the portfolio website files.
-- `terraform/`: Contains the infrastructure configuration files.
-- `.gitignore`: Tells Git which files should not be uploaded to GitHub, including private keys and generated build files.
+The GitHub Actions workflow is configured to run when changes are pushed to the `main` branch. It can also be started manually.
 
-## 8. How to Run the Project
+The pipeline performs the following steps:
 
-### Requirements
+1. Checks out the repository.
+2. Configures AWS credentials from GitHub repository secrets.
+3. Initializes Terraform using the S3 remote-state backend.
+4. Validates the Terraform configuration.
+5. Generates a Terraform plan to check for infrastructure differences.
+6. Sets up Java 17 and Maven caching.
+7. Builds the Java application.
+8. Installs Ansible.
+9. Prepares the SSH private key and inventory on the GitHub Actions runner.
+10. Checks the Ansible playbook syntax.
+11. Executes the playbook to deploy the applications to EC2.
+12. Verifies the running Docker containers.
 
-To work with this project locally, you need:
+A successful workflow run confirms that the configured pipeline steps completed successfully. Application availability should also be checked separately.
 
-- Git
-- Docker
-- Docker Compose
-- Java Development Kit (JDK)
-- Maven
-- Ansible
-- Terraform, if you intend to manage the cloud infrastructure
-- An AWS account for cloud deployment
+## Infrastructure Management with Terraform
 
-### Clone the repository
+Terraform manages the AWS resources required by the project, including the network, subnet, internet gateway, routing, security group, EC2 instance, and S3 resources defined in the configuration.
 
-Open your Linux terminal and run:
+The Terraform state is stored remotely in Amazon S3 to support consistent infrastructure management.
+
+### Validate the configuration
+
+Run from the project directory:
 
 ```bash
-git clone https://github.com/musman-create/java-yearbook-project.git
-cd java-yearbook-project
+cd terraform
+terraform init
+terraform validate
+terraform plan
 ```
 
-### Build the Java application
+Review the plan before applying any infrastructure changes.
 
-Run:
+The expected result, when the actual infrastructure matches the configuration, is:
+
+```text
+No changes. Your infrastructure matches the configuration.
+```
+
+Do not run `terraform destroy` as part of routine deployment verification.
+
+## Deployment with Ansible
+
+Ansible connects to the EC2 instance over SSH and runs the deployment playbook.
+
+The playbook is responsible for configuring Docker and deploying the project using Docker Compose.
+
+To check connectivity:
 
 ```bash
-mvn -f java/pom.xml clean package -DskipTests
+ANSIBLE_HOST_KEY_CHECKING=False ansible webserver \
+  -i ansible/inventory.ini \
+  -m ping
 ```
 
-This command builds the Java application. The `-DskipTests` option skips running tests during this build.
-
-### Check the Docker installation
-
-Run:
+To run the deployment playbook manually:
 
 ```bash
-docker --version
-docker compose version
+ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
+  -i ansible/inventory.ini \
+  ansible/playbook.yml
 ```
 
-These commands display the installed Docker and Docker Compose versions.
+The inventory and SSH private key must be configured correctly. The private key must never be committed to Git.
 
-### Deploy to AWS
+## Docker Compose
 
-The automated deployment is configured through GitHub Actions and Ansible.
+Docker Compose manages the portfolio and Java application as separate services.
 
-To deploy successfully, the AWS EC2 instance must be running, SSH access must be configured, and the required GitHub repository secrets must be available.
-
-**Important:** The commands above demonstrate how to build the application locally. The full AWS deployment also depends on the project's Compose configuration, Ansible playbook, server configuration, and GitHub Actions workflow.
-
-## 9. GitHub Actions Configuration
-
-My repository contains a workflow that automates the build and deployment process.
-
-The workflow is triggered when changes are pushed to the `main` branch. It can also be started manually if manual execution is enabled in the workflow.
-
-The deployment workflow uses GitHub repository secrets to connect securely to the cloud server.
-
-The relevant secrets include:
-
-- `EC2_HOST`: The public IP address or hostname of the EC2 instance.
-- `AWS_SSH_PRIVATE_KEY`: The private SSH key used to connect to the instance.
-
-Secrets are stored in GitHub repository settings rather than written directly into the workflow file.
-
-For security, private SSH keys must never be committed to GitHub or included in this README.
-
-## 10. Deployment Verification
-
-After deployment, I can check whether my applications are running by connecting to the EC2 instance and executing:
+To check the running containers on the EC2 instance through Ansible:
 
 ```bash
-docker ps
+ANSIBLE_HOST_KEY_CHECKING=False ansible webserver \
+  -i ansible/inventory.ini \
+  -b \
+  -m command \
+  -a "docker ps"
 ```
 
-This displays the running Docker containers.
+Expected services include:
 
-To check the restart policies configured for the containers, I can run:
+- `app-portfolio-1`, exposing port 80.
+- `app-java-app-1`, exposing port 8081.
+
+To inspect application logs, run:
 
 ```bash
-docker inspect -f '{{.Name}} -> {{.HostConfig.RestartPolicy.Name}}' $(docker ps -aq)
+ANSIBLE_HOST_KEY_CHECKING=False ansible webserver \
+  -i ansible/inventory.ini \
+  -b \
+  -m command \
+  -a "docker logs --tail 100 app-java-app-1"
 ```
 
-My two main application containers currently use the `always` restart policy. This allows Docker to restart them when appropriate after a container stops or the Docker service restarts.
+## Application Access
 
-I can also check the GitHub Actions page to confirm whether the deployment workflow completed successfully.
+Replace the example IP below with the current public IP of your EC2 instance if it changes.
 
-## 11. Live Project Links
+- **Portfolio:** http://100.54.103.111
+- **Java application:** http://100.54.103.111:8081/
 
-**GitHub Repository**
+The portfolio should return a successful HTTP response. The Java application response depends on the routes implemented by the application.
 
-https://github.com/musman-create/java-yearbook-project
+## Deployment Verification
 
-**Portfolio Website**
+The following checks were performed during project validation:
 
-http://184.193.35.117/
+- Terraform reported that the infrastructure matched its configuration.
+- Ansible successfully connected to the EC2 instance.
+- Docker reported both application containers as running.
+- The portfolio container exposed port 80.
+- The Java application container exposed port 8081.
+- The GitHub Actions deployment workflow completed successfully.
 
-**Java Application**
+Repeat these checks after future deployments and update the evidence when the results change.
 
-http://184.193.35.117:8081/
+## Security and Best Practices
 
-The application links use the EC2 instance's current public IP address. They may stop working when the instance is stopped, and the IP address may change when the instance starts again unless a stable address is configured.
+- Store AWS credentials and SSH private keys in GitHub Actions secrets.
+- Never commit `.pem` files, Terraform state files, or secret values.
+- Keep Terraform state in the configured remote backend.
+- Restrict SSH access to trusted IP addresses instead of opening port 22 to the entire internet.
+- Expose only the application ports that are required.
+- Review Terraform plans before applying infrastructure changes.
+- Use Git commits to track changes to infrastructure and application code.
+- Preserve backups before making changes to Terraform state or critical infrastructure.
 
-## 12. Challenges and Lessons Learned
+## Challenges and Lessons Learned
 
-Building this project helped me understand how the different parts of a cloud deployment work together.
+This project provided practical experience with several common DevOps challenges:
 
-Some of the important lessons I learned include:
+- Troubleshooting SSH connectivity when an EC2 public IP changes.
+- Configuring Ansible inventory and SSH authentication.
+- Managing Terraform state remotely in Amazon S3.
+- Investigating AWS networking and infrastructure configuration.
+- Running multiple Docker containers on one server.
+- Connecting GitHub Actions, Terraform, Ansible, and Docker into a deployment workflow.
+- Verifying infrastructure and application status independently.
 
-- How to connect a local development environment to a remote AWS server using SSH.
-- How to use Git and GitHub to manage project changes.
-- How to build a Java application using Maven.
-- How to run applications in Docker containers.
-- How to manage multiple containers with Docker Compose.
-- How to use Ansible to automate server configuration and deployment.
-- How to configure GitHub Actions to automate repetitive development tasks.
-- How to troubleshoot deployment problems by examining workflow logs, server connectivity, and container status.
-- How to use Terraform to define cloud infrastructure as code.
+## Future Improvements
 
-I also learned that a successful automated deployment requires more than writing code. Network access, credentials, server configuration, container settings, and workflow configuration must all work together.
+Possible next improvements include:
 
-## 13. Future Improvements
+- Add automated application tests to the pipeline.
+- Add health checks and more comprehensive deployment verification.
+- Restrict inbound SSH access and review public exposure of application ports.
+- Add monitoring, centralized logging, and alerting.
+- Introduce an automated rollback strategy.
+- Add a deployment architecture diagram and screenshots.
+- Evaluate a managed container platform as a future extension.
 
-There are several ways I can improve this project further:
+## Conclusion
 
-- Add automated unit and integration tests.
-- Improve security by restricting SSH and application access where appropriate.
-- Configure a stable public IP address or custom domain.
-- Add HTTPS using an SSL/TLS certificate.
-- Add application health checks and monitoring.
-- Improve logging and error reporting.
-- Add deployment notifications.
-- Review the Terraform configuration and automate infrastructure provisioning through a controlled workflow.
-- Add screenshots and a clearer architecture diagram to the repository.
+This capstone demonstrates a practical approach to automating infrastructure checks, building applications, configuring a server, and deploying containerized services on AWS.
 
-## 14. Conclusion
+It combines infrastructure as code, configuration management, containerization, and CI/CD into a project that can be demonstrated and extended as part of a junior cloud or DevOps engineering portfolio.
 
-This capstone project demonstrates my practical understanding of Cloud Computing and DevOps automation.
+**Author:** Sanni Musa Oluwadamilare
 
-I have brought together AWS, Linux, Terraform, Ansible, Docker, Docker Compose, GitHub Actions, Java, and Maven to build a repeatable application deployment process.
-
-The biggest lesson from this project is that DevOps is about making software delivery more consistent by automating tasks that would otherwise be performed manually.
-
-This project is part of my continued learning journey in Cloud Engineering and DevOps, and I intend to keep improving it as I develop more practical skills.
-
----
-
-**Project Status:** Automated deployment workflow successfully executed.
-
-**Areas Demonstrated:** Cloud infrastructure, Linux administration, infrastructure as code, containerization, configuration management, CI/CD, and troubleshooting.
-
-
-
-## CI/CD Verification
-
-This project uses GitHub Actions to validate Terraform, build the Java application, and deploy the applications to EC2 using Ansible and Docker Compose.
+**GitHub Repository:** https://github.com/musman-create/java-yearbook-project
