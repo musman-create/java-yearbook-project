@@ -326,3 +326,8 @@ This project is part of my continued learning journey in Cloud Engineering and D
 
 **Areas Demonstrated:** Cloud infrastructure, Linux administration, infrastructure as code, containerization, configuration management, CI/CD, and troubleshooting.
 
+
+
+## CI/CD Verification
+
+This project uses GitHub Actions to validate Terraform, build the Java application, and deploy the applications to EC2 using Ansible and Docker Compose.
