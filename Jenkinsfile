@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
 
@@ -20,12 +21,35 @@ pipeline {
         stage('Build Java Application') {
             steps {
                 dir('java') {
-                    sh 'mvn clean package -DskipTests'
+                    sh 'mvn clean compile'
                 }
             }
         }
 
-                stage('Build Docker Image') {
+        stage('Run Automated Tests') {
+            steps {
+                dir('java') {
+                    sh 'mvn test'
+                }
+            }
+            post {
+                always {
+                    dir('java') {
+                        junit 'target/surefire-reports/*.xml'
+                    }
+                }
+            }
+        }
+
+        stage('Package Java Application') {
+            steps {
+                dir('java') {
+                    sh 'mvn package -DskipTests'
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
             steps {
                 sh 'docker build -t ${APP_NAME}:${BUILD_NUMBER} ./java'
             }
@@ -61,3 +85,4 @@ pipeline {
         }
     }
 }
+

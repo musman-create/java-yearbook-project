@@ -6,16 +6,26 @@ import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
-
 public class Application {
 
     public static void main(String[] args) throws IOException {
 
-        int port = 8081;
+        int port = args.length > 0 ? Integer.parseInt(args[0]) : 8081;
+
+        HttpServer server = createServer(port);
+
+        System.out.println("======================================");
+        System.out.println("   profAkymbo DevOps Java Application");
+        System.out.println("   Server running on port " + port);
+        System.out.println("======================================");
+
+        server.start();
+    }
+
+    static HttpServer createServer(int port) throws IOException {
 
         HttpServer server = HttpServer.create(
-            new InetSocketAddress(port),
-            0
+            new InetSocketAddress(port), 0
         );
 
         server.createContext("/profile", Application::handleProfileRequest);
@@ -23,25 +33,8 @@ public class Application {
 
         server.setExecutor(null);
 
-        System.out.println(
-            "======================================"
-        );
-
-        System.out.println(
-            "   profAkymbo DevOps Java Application"
-        );
-
-        System.out.println(
-            "   Server running on port " + port
-        );
-
-        System.out.println(
-            "======================================"
-        );
-
-        server.start();
+        return server;
     }
-
 
     private static void handleProfileRequest(HttpExchange exchange)
             throws IOException {
