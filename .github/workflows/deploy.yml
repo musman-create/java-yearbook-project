@@ -50,7 +50,16 @@ jobs:
 
       - name: Plan infrastructure changes
         working-directory: terraform
-        run: terraform plan -input=false -no-color
+        run: terraform plan -input=false -no-color -out=tfplan
+
+      - name: Show Terraform plan
+        working-directory: terraform
+        run: terraform show -no-color tfplan
+
+      - name: Apply Terraform infrastructure
+        if: github.event_name == 'workflow_dispatch'
+        working-directory: terraform
+        run: terraform apply -input=false -auto-approve -no-color tfplan
 
       # Build the Java application
       - name: Set up Java 17
