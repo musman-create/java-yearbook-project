@@ -25,7 +25,7 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+                stage('Build Docker Image') {
             steps {
                 sh 'docker build -t ${APP_NAME}:${BUILD_NUMBER} ./java'
             }
@@ -34,6 +34,20 @@ pipeline {
         stage('Verify Docker Image') {
             steps {
                 sh 'docker images ${APP_NAME}'
+            }
+        }
+
+        stage('Deploy Application') {
+            steps {
+                sh '''
+                    docker rm -f java-yearbook-jenkins || true
+
+                    docker run -d \
+                      --name java-yearbook-jenkins \
+                      --restart unless-stopped \
+                      -p 8083:8081 \
+                      ${APP_NAME}:${BUILD_NUMBER}
+                '''
             }
         }
     }
